@@ -1,0 +1,32 @@
+yarn add sequelize-cli:  thực hiện code  rổi mới tạo database
+
+yarn sequelize-cli-init để tạo ra 4 thư mục
+config: khai báo chuỗi csdl thông qua định dạng json
+migration:
+models: chứa các lớp đối tượng, up và down tạo table
+seeders: thực hiện 2 hàm up và down để tạo data thông qua js
+
+yarn sequelize-cli model:generate => giúp định nghĩa 1 lớp đối tượng
+
+yarn sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string
+=> giúp tạo một đối tượng (column)
+
+yarn sequelize-cli db:migrate tạo table trong database
+
+yarn add sequelize-auto => giúp đưa hết table vào trong code luôn
+
+yarn sequelize-auto -h <host> -d <database> -u <user>
+-x [password] -p [port] --dialect [dialect] -o [/path/to/models]
+-l es6
+VD:
+yarn sequelize-auto -h 127.0.0.1 -d db_youtube -u root -x 1234 -p 3306 --dialect mysql -o src/models -l esm
+
+yarn add dotenv: giúp ta thêm biến môi trường của ta vào đối tượng process.env (biến môi trường hệ thống)
+
+thư viện mã hóa mật khẩu để bảo mật hơn: yarn add bcrypt
+
+yarn add jsonwebtoken: 
+1. Mã hóa dữ liệu
+2. Kiểm tra token hợp lệ
+3. Giải token
+Token có 3 phần: header,payload(chứa data), và Verify Signature(khóa bí mật)
