@@ -8,6 +8,23 @@
 import jwt from "jsonwebtoken";
 
 // refresh token: làm mới lại token khi hết hạn sử dụng (lưu ở table)
+export const createRefreshToken = (data) => {
+  let token = jwt.sign({ data }, process.env.SECRET_TOKEN_REFRESH, {
+    algorithm: "HS256",
+    expiresIn: "7d", // ko có tháng
+  });
+  return token;
+};
+
+export const checkRefreshToken = (token) => {
+  return jwt.verify(
+    token,
+    process.env.SECRET_TOKEN_REFRESH,
+    (error, decoded) => {
+      return error;
+    }
+  );
+};
 
 export const createToken = (data) => {
   // hàm sign có 3 tham số:
@@ -20,7 +37,7 @@ export const createToken = (data) => {
   */
   let token = jwt.sign({ data }, process.env.SECRET_TOKEN, {
     algorithm: "HS256",
-    expiresIn: "10m", // ko có tháng
+    expiresIn: "5s", // ko có tháng
   });
   return token;
 };
@@ -54,8 +71,6 @@ export const verifyToken = (req, res, next) => {
     next();
   } else {
     // token không hợp lệ
-    res
-      .status(401)
-      .send("Không có quyền truy cập: " + checkTokenVerify.message);
+    res.status(401).send(checkTokenVerify.name);
   }
 };

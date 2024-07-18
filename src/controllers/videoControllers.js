@@ -9,6 +9,32 @@ import { decodeToken } from "../config/jwt.js";
 let model = initModels(sequelize);
 let Op = Sequelize.Op; // để thực hiện điều kiện where LIKE
 
+// prisma
+import { PrismaClient } from "@prisma/client";
+import { io } from "../server.js";
+let prisma = new PrismaClient(); // prisma đóng vai trò như model
+
+export const searchVideo = async (req, res) => {
+  let { videoName } = req.params;
+  // Select * from video
+  // let data = await model.video.findAll();
+  // findOne -> findUnique
+  // findFirst -> tìm thằng đầu tiên trong danh sách thỏa mãn điều kiện (tránh dữ liệu trùng)
+
+  // khác biệt prisma và sequelize
+  // prisma.video.create({data: {video_id,video_name,...}}) <=> model.video.create({video_id,video_name,...}) (prisma nhận qua data)
+  // prisma.video.update({data: {video_id,video_name,...}, where: {}})
+  // prisma.video.delete({where}) <=> model.video.destroy()
+
+  let data = await prisma.video.findMany({
+    // cách join bảng khác
+    include: {
+      video_type: true,
+    },
+  });
+  responseData(res, "Thành công", data, 200);
+};
+
 export const getVideoPage = async (req, res) => {
   try {
     let { page } = req.params; // lấy page từ đường đẫn FE
@@ -145,7 +171,7 @@ export const commentVideo = async (req, res) => {
     // giải mã token => object giống bên trang jwt.io
     let dToken = decodeToken(token);
 
-    let { user_id } = dToken;
+    let { user_id } = dToken.data;
     let { video_id, content } = req.body;
 
     let newData = {
@@ -159,7 +185,16 @@ export const commentVideo = async (req, res) => {
 
     await model.video_comment.create(newData);
 
-    responseData(res, "Thành công", { token, user_id, video_id, content }, 200);
+    let commentSocket = await model.video_comment.findAll({
+      where: {
+        video_id,
+      },
+      include: ["user"],
+    });
+
+    io.emit("new-data-comment", commentSocket);
+
+    responseData(res, "Thành công", "", 200);
   } catch (error) {
     responseData(res, "Lỗi...", error.message, 500);
   }

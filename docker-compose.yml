@@ -1,0 +1,48 @@
+#  version của docker-compose
+version: '3'
+# tạo ra container
+services: 
+  mysql_db:
+    image: mysql #docker pull mysql
+    container_name: mysql_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_db:/var/lib/mysql
+    networks:
+      - node-work
+  
+  app:
+    depends_on: #kết nối container khác
+      - mysql_db
+    build: .  #docker build .
+    container_name: cons-node
+    ports:
+      - 2024:6969 # 2024 sẽ là port mà mình truy cập data khi lên web: localhost:2024/... còn 6969 sẽ là port tương ứng trong server.js (lệnh app.listen)
+    networks:
+      - node-work
+
+  # ko nên gom các source khác với nhau
+  # fe-youtube:
+  #   build: ./youtube/build
+  #   container_name: cons_youtube
+  #   ports:
+  #     - 3000:80
+  #   networks:
+  #     - node-work
+
+# tạo ra volume
+volumes:
+  mysql_db: # tên volume
+    driver: local
+
+# gom nhóm các container lại về 1, nếu ko có network thì các container riêng biệt độc lập
+networks:
+  node-work: 
+
+
+# docker-compose up -d
+# docker-compose down => xóa container nhưng ko xóa images
+# docker-compose up -build -d => build lại tự đầu (cả img và container luôn)

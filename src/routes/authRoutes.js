@@ -2,7 +2,13 @@
 // authenrization: ủy quyền
 
 import express from "express";
-import { login, loginFacebook, signup } from "../controllers/authController.js";
+import {
+  login,
+  loginFacebook,
+  logout,
+  signup,
+  tokenRefresh,
+} from "../controllers/authController.js";
 
 const authRoutes = express.Router();
 
@@ -12,6 +18,10 @@ authRoutes.post("/login", login);
 authRoutes.post("/signup", signup);
 // login Facebook
 authRoutes.post("/login-facebook", loginFacebook);
+// refresh token
+authRoutes.post("/refresh-token", tokenRefresh);
+// api logout
+authRoutes.post("/logout", logout);
 
 export default authRoutes;
 /* 

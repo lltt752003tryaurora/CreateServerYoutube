@@ -10,6 +10,7 @@ import {
   getVideoLike,
   getVideoPage,
   getVideoType,
+  searchVideo,
 } from "../controllers/videoControllers.js";
 import { checkToken, verifyToken } from "../config/jwt.js";
 
@@ -34,5 +35,8 @@ videoRoutes.get("/get-comment-video/:videoId", getCommentVideoId);
 
 // API đưa comment video lên BE
 videoRoutes.post("/comment-video", commentVideo);
+
+// API lấy video bằng prisma search
+videoRoutes.get("/search-video/:videoName", searchVideo);
 
 export default videoRoutes;

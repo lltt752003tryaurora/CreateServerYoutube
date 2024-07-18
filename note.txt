@@ -30,3 +30,26 @@ yarn add jsonwebtoken:
 2. Kiểm tra token hợp lệ
 3. Giải token
 Token có 3 phần: header,payload(chứa data), và Verify Signature(khóa bí mật)
+
+Phương thức PUT: Cập nhật tất cả thông tin
+Phương thức PATCH: Cập nhật 1 vài thông tin
+
+
++/ 3 cách lưu trữ hình
+1/ lưu trên source BE (có thể tốn ổ cứng) -> localhost:6969/public/img/meo1/jpg -> dùng thư viện yarn add multer
+2/ lưu trực tiếp trên column của table (băm ra thành mã rồi khi lấy hình thì mã hóa chuỗi để lấy)
+3/ lưu trên source bên thứ 3 (cloundinary)
+Việc upload sẽ diễn ra ở middleware FE gửi lên và BE nhận được
+
+
+Thư viện giúp giảm chất lượng hình ảnh
+yarn add compress-images
+
+
+Cài đặt thư viện của prisma:
+yarn add prisma @prisma/client -> giúp truy vấn dữ liệu
+Các bước set up
+1. Set the DATABASE_URL in the .env file to point to your existing database. If your database has no tables yet, read https://pris.ly/d/getting-started   
+2. Set the provider of the datasource block in schema.prisma to match your database: postgresql, mysql, sqlite, sqlserver, mongodb or cockroachdb.        
+3. Run yarn prisma db pull to turn your database schema into a Prisma schema. (để đưa tất cả table vào file prisma) nếu push là đầy từ code về table, đè hết các dữ liệu
+4. Run yarn prisma generate to generate the Prisma Client. You can then start querying your database. (gom hết tất cả model vào thư viện @prisma/client mới truy vấn được -> dùng yarn prisma generate) -> mỗi lần thay đổi gì trong các model p gõ lệnh này để tạo lại mới
